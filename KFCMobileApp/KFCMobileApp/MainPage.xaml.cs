@@ -21,5 +21,11 @@ namespace KFCMobileApp
             // we are holding EntUserName text data in "username"
             Preferences.Set("username", EntUserName.Text);
         }
+
+        private void btnRetrieve_Clicked(object sender, EventArgs e)
+        {
+            var response = Preferences.Get("username", string.Empty);
+            lblUserName.Text = response;
+        }
     }
 }

@@ -22,7 +22,8 @@
 
         <Entry Placeholder="Kullanıcı adı girin!.." x:Name="EntUserName"/>
         <Button Text="Kaydet" x:Name="btnSave" Clicked="btnSave_Clicked"/>
-
+        <Button Text="VeriAl" x:Name="btnRetrieve" Clicked="btnRetrieve_Clicked"/>
+        <Label x:Name="lblUserName"/>
     </StackLayout>
 
 </ContentPage>
