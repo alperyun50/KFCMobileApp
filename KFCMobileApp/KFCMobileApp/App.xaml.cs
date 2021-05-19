@@ -1,4 +1,6 @@
-﻿using System;
+﻿using KFCMobileApp.Pages;
+using System;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -10,7 +12,18 @@ namespace KFCMobileApp
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
+            // one time login function
+            var accesstoken = Preferences.Get("AccessToken", string.Empty);
+            if(string.IsNullOrEmpty(accesstoken))
+            {
+                MainPage = new NavigationPage(new SignupPage());
+            }
+            else
+            {
+                MainPage = new NavigationPage(new HomePage());
+            }
+
+            MainPage = new NavigationPage(new SignupPage());
         }
 
         protected override void OnStart()

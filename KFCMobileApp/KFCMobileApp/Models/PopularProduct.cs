@@ -10,5 +10,7 @@ namespace KFCMobileApp.Models
         public string name { get; set; }
         public double price { get; set; }
         public string image_url { get; set; }
+
+        public string FullImageUrl => AppSettings.apiUrl + image_url;
     }
 }
