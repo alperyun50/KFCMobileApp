@@ -12,5 +12,8 @@ namespace KFCMobileApp.Models
         public string detail { get; set; }
         public int category_id { get; set; }
         public string image_url { get; set; }
+
+        // image url concatenated with api url
+        public string FullImageUrl => AppSettings.apiUrl + image_url;
     }
 }

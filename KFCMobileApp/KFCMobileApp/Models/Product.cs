@@ -14,5 +14,7 @@ namespace KFCMobileApp.Models
         public bool is_popular_product { get; set; }
         public int category_id { get; set; }
         public object image_array { get; set; }
+
+        public string FullImageUrl => AppSettings.apiUrl + image_url;
     }
 }

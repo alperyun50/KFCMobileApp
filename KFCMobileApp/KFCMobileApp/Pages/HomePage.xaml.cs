@@ -69,5 +69,24 @@ namespace KFCMobileApp.Pages
             var response = await ApiService.GetTotalCartItems(Preferences.Get("userid", 0));
             LblTotalItems.Text = response.total_items.ToString();
         }
+
+        private void CvCategories_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var currentselection = e.CurrentSelection.FirstOrDefault() as Category;
+            // just check if current selection is already null then dont execute any code
+            if (currentselection == null) return;
+            Navigation.PushModalAsync(new ProductListPage(currentselection.id, currentselection.name));
+            //selecteditem highligt locking error solved
+            ((CollectionView)sender).SelectedItem = null;
+        }
+
+        private void CvProducts_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var currentSelection = e.CurrentSelection.FirstOrDefault() as PopularProduct;
+            if (currentSelection == null) return;
+            Navigation.PushModalAsync(new ProductDetailPage(currentSelection.id));
+            // so we can choose the same product again
+            ((CollectionView)sender).SelectedItem = null;
+        }
     }
 }
