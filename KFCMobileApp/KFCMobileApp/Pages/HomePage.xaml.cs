@@ -56,10 +56,9 @@ namespace KFCMobileApp.Pages
             await SlMenu.TranslateTo(0, 0, 400, Easing.Linear);
         }
 
-        private async void TapCloseMenu_Tapped(object sender, EventArgs e)
+        private void TapCloseMenu_Tapped(object sender, EventArgs e)
         {
-            await SlMenu.TranslateTo(-250, 0, 400, Easing.Linear);
-            GridOverlay.IsVisible = false;
+            CloseHamburgerMenu();
         }
 
         // execute constructor more than once
@@ -68,6 +67,18 @@ namespace KFCMobileApp.Pages
             base.OnAppearing();
             var response = await ApiService.GetTotalCartItems(Preferences.Get("userid", 0));
             LblTotalItems.Text = response.total_items.ToString();
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            CloseHamburgerMenu();
+        }
+
+        private async void CloseHamburgerMenu()
+        {
+            await SlMenu.TranslateTo(-250, 0, 400, Easing.Linear);
+            GridOverlay.IsVisible = false;
         }
 
         private void CvCategories_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -87,6 +98,33 @@ namespace KFCMobileApp.Pages
             Navigation.PushModalAsync(new ProductDetailPage(currentSelection.id));
             // so we can choose the same product again
             ((CollectionView)sender).SelectedItem = null;
+        }
+
+        private void TapCartIcon_Tapped(object sender, EventArgs e)
+        {
+            Navigation.PushModalAsync(new CartPage());
+        }
+
+        private void TapOrders_Tapped(object sender, EventArgs e)
+        {
+            Navigation.PushModalAsync(new OrdersPage());
+        }
+
+        private void TapContact_Tapped(object sender, EventArgs e)
+        {
+            Navigation.PushModalAsync(new ContactPage());
+        }
+
+        private void TapCart_Tapped(object sender, EventArgs e)
+        {
+            Navigation.PushModalAsync(new CartPage());
+        }
+
+        private void TapLogout_Tapped(object sender, EventArgs e)
+        {
+            Preferences.Set("accessToken", string.Empty);
+            Preferences.Set("tokenExpirationTime", 0);
+            Application.Current.MainPage = new NavigationPage(new SignupPage());
         }
     }
 }

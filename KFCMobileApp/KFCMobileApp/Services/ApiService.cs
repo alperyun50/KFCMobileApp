@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using UnixTimeStamp;
 using Xamarin.Essentials;
 
 namespace KFCMobileApp.Services
@@ -64,12 +65,16 @@ namespace KFCMobileApp.Services
             Preferences.Set("accesstoken", result.access_token);
             Preferences.Set("userid", result.user_id);
             Preferences.Set("username", result.user_name);
+            Preferences.Set("tokenExpirationTime", result.expiration_time);
+            // hold current time with preferences
+            Preferences.Set("currentTime", UnixTime.GetCurrentTime());
 
             return true;
         }
 
         public static async Task<List<Category>> GetCategories()
         {
+            await TokenValidator.CheckTokenValidity();
             var httpclient = new HttpClient();
             httpclient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", Preferences.Get("accesstoken", string.Empty));
             var response = await httpclient.GetStringAsync(AppSettings.apiUrl + "api/Categories");
@@ -79,6 +84,7 @@ namespace KFCMobileApp.Services
 
         public static async Task<Product> GetProductById(int productId)
         {
+            await TokenValidator.CheckTokenValidity();
             var httpclient = new HttpClient();
             httpclient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", Preferences.Get("accesstoken", string.Empty));
             var response = await httpclient.GetStringAsync(AppSettings.apiUrl + "api/Products/" + productId);
@@ -201,6 +207,23 @@ namespace KFCMobileApp.Services
             var response = await httpclient.GetStringAsync(AppSettings.apiUrl + "api/Orders/OrderDetails/" + orderId);
             // convert response json data to csharp object
             return JsonConvert.DeserializeObject<List<Order>>(response);
+        }
+    }
+
+    public static class TokenValidator
+    {
+        public async static Task CheckTokenValidity()
+        {
+            var expirationTime = Preferences.Get("tokenExpirationTime", 0);
+            Preferences.Set("currentTime", UnixTime.GetCurrentTime());
+            var currentTime = Preferences.Get("CurrentTime", 0);
+
+            if(expirationTime < currentTime)
+            {
+                var email = Preferences.Get("email", string.Empty);
+                var password = Preferences.Get("password", string.Empty);
+                await ApiService.Login(email, password);
+            }
         }
     }
 }

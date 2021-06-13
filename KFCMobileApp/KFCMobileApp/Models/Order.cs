@@ -10,7 +10,7 @@ namespace KFCMobileApp.Models
         public string full_name { get; set; }
         public string address { get; set; }
         public string phone { get; set; }
-        public int order_total { get; set; }
+        public double order_total { get; set; }
         public DateTime order_placed { get; set; }
         public bool is_order_completed { get; set; }
         public int user_id { get; set; }
